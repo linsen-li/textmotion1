@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vertical Rolling Danmaku Example</title>
+<style>
+    .danmaku-container {
+        position: relative;
+        width: 80%;
+        height: 1200px;
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #fff; /* Added background color for better visibility */
+    }
+
+    .danmaku {
+        position: absolute;
+        white-space: nowrap;
+        font-size: 18px;
+        color: #000;
+        background-color: rgba(255, 255, 255, 0.7);
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+</style>
+</head>
+<body>
+    <div class="danmaku-container" id="danmaku-container"></div>
+
+    <script>
+        // 弹幕数据结构
+        class Danmaku {
+            constructor(text, speed, left) {
+                this.text = text;
+                this.speed = speed;
+                this.left = left;
+                this.element = document.createElement('div');
+                this.element.className = 'danmaku';
+                this.element.textContent = text;
+                this.element.style.left = left + 'px';
+            }
+
+            move(containerHeight) {
+                let container = document.getElementById('danmaku-container');
+                container.appendChild(this.element);
+                let position = containerHeight;
+                let interval = 10; // Interval in milliseconds
+                let speedPerInterval = (this.speed / 1000) * interval; // Speed in pixels per interval
+
+                let id = setInterval(() => {
+                    position -= speedPerInterval;
+                    this.element.style.top = position + 'px';
+                    if (position + this.element.offsetHeight <= 0) {
+                        position = containerHeight; // Reset to the bottom
+                    }
+                }, interval);
+            }
+        }
+
+        // 创建弹幕示例
+        function createDanmaku(text, speed) {
+            let container = document.getElementById('danmaku-container');
+            let left = Math.floor(Math.random() * (container.offsetWidth - 150))/2; // Adjusted for text width
+            let danmaku = new Danmaku(text, speed, left);
+            danmaku.move(container.offsetHeight);
+        }
+
+        // 示例：生成弹幕
+        createDanmaku('1. This video is absolutely amazing! The quality and content are top-notch!', 100);
+        createDanmaku('2. I can\'t stop laughing! This is the funniest thing I\'ve seen all week!', 200);
+        createDanmaku('3. I\'m really disappointed with the content. I expected much more.', 300);
+        createDanmaku('4. This is so inspiring. I feel motivated to try this out myself!', 400);
+        createDanmaku('5. I feel disrespected by the way certain topics were handled in this video.', 500);
+        createDanmaku('6. This is infuriating! How can you spread such harmful misinformation?', 600);
+        createDanmaku('7. The production value is great, but the message is completely off. I\'m quite upset.', 700);
+        createDanmaku('8. This is misleading and factually incorrect. Please do better research next time.', 800);
+        createDanmaku('9. This is infuriating! How can you spread such harmful misinformation?', 900);
+    </script>
+</body>
+</html>
